@@ -38,10 +38,10 @@
 			</div>
 			<hr class="bg-info">
 			<div class="alert alert-danger" v-if="errorMsg">
-				Error Message
+				{{ errorMsg }}
 			</div>
 			<div class="alert alert-success" v-if="successMsg">
-				Success Message
+				{{ successMsg }}
 			</div>
 
 			<!-- Displaying Records -->
@@ -59,29 +59,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="text-center">
-								<td>1</td>
-								<td>John Doe</td>
-								<td>john@mail.com</td>
-								<td>081234567890</td>
-								<td><a href="#" class="text-success" @click="editModal=true"><i class="fa fa-edit"></i></a></td>
-								<td><a href="#" class="text-danger" @click="deleteModal=true"><i class="fa fa-trash"></i></a></td>
-							</tr>
-							<tr class="text-center">
-								<td>1</td>
-								<td>John Doe</td>
-								<td>john@mail.com</td>
-								<td>081234567890</td>
-								<td><a href="#" class="text-success"><i class="fa fa-edit"></i></a></td>
-								<td><a href="#" class="text-danger"><i class="fa fa-trash"></i></a></td>
-							</tr>
-							<tr class="text-center">
-								<td>1</td>
-								<td>John Doe</td>
-								<td>john@mail.com</td>
-								<td>081234567890</td>
-								<td><a href="#" class="text-success"><i class="fa fa-edit"></i></a></td>
-								<td><a href="#" class="text-danger"><i class="fa fa-trash"></i></a></td>
+							<tr class="text-center" v-for="user in users">
+								<td>{{ user.id }}</td>
+								<td>{{ user.name }}</td>
+								<td>{{ user.email }}</td>
+								<td>{{ user.phone }}</td>
+								<td><a href="#" class="text-success" @click="editModal=true; selectUser(user);"><i class="fa fa-edit"></i></a></td>
+								<td><a href="#" class="text-danger" @click="deleteModal=true; selectUser(user);"><i class="fa fa-trash"></i></a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -102,16 +86,16 @@
 					<div class="modal-body p-4">
 						<form action="#" method="POST">
 							<div class="form-group">
-								<input type="text" name="name" class="form-control form-control-lg" placeholder="Name">
+								<input type="text" name="name" class="form-control form-control-lg" placeholder="Name" v-model="newUser.name">
 							</div>
 							<div class="form-group">
-								<input type="email" name="email" class="form-control form-control-lg" placeholder="Email">
+								<input type="email" name="email" class="form-control form-control-lg" placeholder="Email" v-model="newUser.email">
 							</div>
 							<div class="form-group">
-								<input type="tel" name="phone" class="form-control form-control-lg" placeholder="Phone">
+								<input type="tel" name="phone" class="form-control form-control-lg" placeholder="Phone" v-model="newUser.phone">
 							</div>
 							<div class="form-group">
-								<button class="btn btn-info btn-block btn-lg" @click="showAddModal=false">Add User</button>
+								<button class="btn btn-info btn-block btn-lg" @click="showAddModal=false; addUser(); clearMessage();">Add User</button>
 							</div>
 						</form>
 					</div>
@@ -132,16 +116,16 @@
 					<div class="modal-body p-4">
 						<form action="#" method="POST">
 							<div class="form-group">
-								<input type="text" name="name" class="form-control form-control-lg" placeholder="Name">
+								<input type="text" name="name" class="form-control form-control-lg" v-model="currentUser.name">
 							</div>
 							<div class="form-group">
-								<input type="email" name="email" class="form-control form-control-lg" placeholder="Email">
+								<input type="email" name="email" class="form-control form-control-lg" v-model="currentUser.email">
 							</div>
 							<div class="form-group">
-								<input type="tel" name="phone" class="form-control form-control-lg" placeholder="Phone">
+								<input type="tel" name="phone" class="form-control form-control-lg" v-model="currentUser.phone">
 							</div>
 							<div class="form-group">
-								<button class="btn btn-info btn-block btn-lg" @click="editModal=false">Update User</button>
+								<button class="btn btn-info btn-block btn-lg" @click="editModal=false; updateUser(); clearMessage();">Update User</button>
 							</div>
 						</form>
 					</div>
@@ -154,18 +138,18 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Edit User</h5>
-						<button type="button" class="close" @click="deleteModal=false">
+						<h5 class="modal-title">Delete User</h5>
+						<button type="button" class="close" @click="deleteModal=false; clearMessage();">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body p-4">
 						<h4 class="text-danger">Are you sure want to delete this?</h4>
-						<h5>You're deleteing 'John Doe'</h5>
+						<h5>You're deleteing '{{ currentUser.name }}'</h5>
 						<hr>
-						<button class="btn btn-danger btn-lg" @click="deleteModal=false">Yes</button>
+						<button class="btn btn-danger btn-lg" @click="deleteModal=false; deleteUser(); clearMessage();">Yes</button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<button class="btn btn-success btn-lg" @click="deleteModal=false">No</button>
+						<button class="btn btn-success btn-lg" @click="deleteModal=false; clearMessage();">No</button>
 
 					</div>
 				</div>
@@ -173,6 +157,7 @@
 		</div>		
 	</div>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script type="text/javascript" src="main.js"></script>
 </body>
